@@ -1,4 +1,4 @@
-package servicios
+package services
 
 import (
 	"database/sql"
@@ -7,17 +7,13 @@ import (
 )
 
 type Cliente struct {
-	Nombre   string
-	Contacto string
+	Nombre   string `json:"nombre"`
+	Contacto string `json:"contacto"`
 }
 
-// Agregar un registro a la tabla Cliente
 func AgregarCliente(db *sql.DB, cliente Cliente) error {
-	// Consulta para agregar registro
-	query := `INSERT INTO Clientes (Nombre, Contacto) VALUES(?,?)`
-	// Ejecuta la consulta
+	query := `INSERT INTO Clientes (Nombre, Contacto) VALUES (?, ?)`
 	_, err := db.Exec(query, cliente.Nombre, cliente.Contacto)
-
 	if err != nil {
 		log.Printf("Error al registrar cliente: %v", err)
 		return err
