@@ -1,2 +1,11 @@
-runtime: go113
+runtime: go122
 
+env_variables:
+  DB_USER: "root"
+  DB_PASSWORD: "root"
+  DB_HOST: "127.0.0.1"
+  DB_NAME: "Inventario"
+
+handlers:
+  - url: /.*
+    script: auto
