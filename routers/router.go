@@ -22,6 +22,8 @@ func InitRouter() *mux.Router {
 	
 	// Proveedores
 	router.HandleFunc("/proveedores", controllers.AgregarProveedor).Methods("POST")
+	router.HandleFunc("/proveedor/{id}", controllers.ModificarProveedor).Methods("PUT")
+	router.HandleFunc("/proveedor/{id}", controllers.EliminarProveedor).Methods("DELETE")	
 
 	// Ventas
 	router.HandleFunc("/ventas", controllers.AgregarVenta).Methods("POST")
