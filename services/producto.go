@@ -37,6 +37,17 @@ func ModificarProducto(db *sql.DB, producto Producto) error {
 	return nil
 }
 
+func EliminarProducto(db *sql.DB, id string) error {
+	query := `DELETE FROM Productos WHERE Id=?`
+	_, err := db.Exec(query, id)
+	if err != nil {
+		log.Printf("Error al eliminar producto: %v", err)
+		return err
+	}
+	fmt.Println("Producto eliminado correctamente.")
+	return nil
+}
+
 func ListarProductos(db *sql.DB) ([]Producto, error) {
 	query := `SELECT Id, Nombre, Categoria, Precio, Cantidad, ID_Proveedor FROM Productos`
 	rows, err := db.Query(query)
@@ -91,3 +102,13 @@ func BuscarProducto(db *sql.DB, buscar string) ([]Producto, error) {
 	return productos,nil 
 }
 
+func ActualizarStock(db *sql.DB, cantidad, idProducto int) error {
+	query := `UPDATE Productos SET Cantidad = Cantidad - ? WHERE ID = ?`
+	_, err := db.Exec(query, cantidad, idProducto)
+	if err != nil {
+		log.Printf("Error al actualizar la cantidad del producto: %v", err)
+		return err
+	}
+	fmt.Println("Cantidad actualizada correctamente.")
+	return nil
+}
