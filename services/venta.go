@@ -11,6 +11,7 @@ type Venta struct {
 	ID_Producto int    `json:"id_producto"`
 	ID_Cliente  int    `json:"id_cliente"`
 	Cantidad    int    `json:"cantidad"`
+	Total       float64 `json: "total`
 	Fecha       string `json:"fecha"`
 }
 
@@ -38,6 +39,15 @@ func AgregarVenta(db *sql.DB, venta Venta) error {
 		return nil
 	}
 
+	var precioProducto float64
+	err = db.QueryRow("SELECT Precio FROM Productos WHERE ID = ?", venta.ID_Producto).Scan(&precioProducto)
+	if err != nil {
+		log.Printf("Error al obtener precio del producto: %v", err)
+		return err
+	}
+
+	venta.Total = precioProducto * float64(venta.Cantidad) // Calcula el total
+
 	tx, err := db.Begin()
 	if err != nil {
 		log.Printf("Error al iniciar transacción: %v", err)
@@ -60,8 +70,8 @@ func AgregarVenta(db *sql.DB, venta Venta) error {
 	}
 
 	// Registrar la venta
-	query := `INSERT INTO Ventas (ID_Producto, ID_Cliente, Cantidad, Fecha) VALUES (?, ?, ?, ?)`
-	_, err = tx.Exec(query, venta.ID_Producto, venta.ID_Cliente, venta.Cantidad, venta.Fecha)
+	query := `INSERT INTO Ventas (ID_Producto, ID_Cliente, Cantidad, Total, Fecha) VALUES (?, ?, ?, ?, ?)` 
+	_, err = tx.Exec(query, venta.ID_Producto, venta.ID_Cliente, venta.Cantidad, venta.Total, venta.Fecha)
 	if err != nil {
 		log.Printf("Error al registrar venta: %v", err)
 		return err
@@ -71,7 +81,7 @@ func AgregarVenta(db *sql.DB, venta Venta) error {
 }
 
 func BuscarVentaPorFecha(db *sql.DB, fechaBusqueda string) ([]Venta, error) {
-	query := `SELECT ID_Producto, ID_Cliente, Cantidad, Fecha FROM Ventas WHERE Fecha = ?`
+	query := `SELECT ID_Producto, ID_Cliente, Cantidad, Total, Fecha FROM Ventas WHERE Fecha = ?`
 	rows, err := db.Query(query, fechaBusqueda)
 	if err != nil {
 		log.Printf("Error al buscar venta: %v", err)
@@ -82,7 +92,7 @@ func BuscarVentaPorFecha(db *sql.DB, fechaBusqueda string) ([]Venta, error) {
 	var ventas []Venta
 	for rows.Next() {
 		var venta Venta
-		if err := rows.Scan(&venta.ID_Producto, &venta.ID_Cliente, &venta.Cantidad, &venta.Fecha); err != nil {
+		if err := rows.Scan(&venta.ID_Producto, &venta.ID_Cliente, &venta.Cantidad, &venta.Total, &venta.Fecha); err != nil {
 			log.Printf("Error al leer fila: %v", err)
 			continue
 		}
@@ -122,3 +132,5 @@ func GenerarInforme(db *sql.DB, fechaInicio, fechaFin string) ([]map[string]inte
 	}
 	return informe, nil
 }
+
+
