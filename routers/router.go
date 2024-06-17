@@ -9,6 +9,9 @@ func InitRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/clientes", controllers.AgregarCliente).Methods("POST")
+	router.HandleFunc("/cliente/{id}", controllers.ModificarCliente).Methods("PUT")
+	router.HandleFunc("/cliente/{id}", controllers.EliminarCliente).Methods("DELETE")
+
 
 	router.HandleFunc("/productos", controllers.AgregarProducto).Methods("POST")
 	router.HandleFunc("/productos", controllers.ListarProductos).Methods("GET")
