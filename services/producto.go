@@ -25,6 +25,29 @@ func AgregarProducto(db *sql.DB, producto Producto) error {
 	return nil
 }
 
+func ModificarProducto(db *sql.DB, producto Producto) error {
+	query := `UPDATE Productos SET Nombre=?, Categoria=?, Cantidad=?, ID_Proveedor=? WHERE Id=?`
+	_, err := db.Exec(query, producto.Nombre, producto.Categoria, producto.Cantidad, producto.ID_Proveedor, producto.Id)
+	if err != nil {
+		log.Printf("Error al modificar producto: %v", err)
+		return err
+	}
+	fmt.Println("Producto modificado correctamente.")
+	return nil
+}
+
+func EliminarProducto(db *sql.DB, id string) error {
+	query := `DELETE FROM Productos WHERE Id=?`
+	_, err := db.Exec(query, id)
+	if err != nil {
+		log.Printf("Error al eliminar producto: %v", err)
+		return err
+	}
+	fmt.Println("Producto eliminado correctamente.")
+	return nil
+}
+
+
 func ListarProductos(db *sql.DB) ([]Producto, error) {
 	query := `SELECT * FROM Productos`
 	rows, err := db.Query(query)

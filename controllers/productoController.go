@@ -5,6 +5,8 @@ import (
 	"Inventario/utils"
 	"encoding/json"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func AgregarProducto(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +28,42 @@ func AgregarProducto(w http.ResponseWriter, r *http.Request) {
 		"message": "Producto registrado correctamente",
 	})
 }
+
+func ModificarProducto(w http.ResponseWriter, r *http.Request) {
+	var producto services.Producto
+	if err := json.NewDecoder(r.Body).Decode(&producto); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	db := utils.GetDB()
+	err := services.ModificarProducto(db, producto)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "Producto modificado correctamente",
+	})
+}
+
+func EliminarProducto(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	db := utils.GetDB()
+	err := services.EliminarProducto(db, id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "Producto eliminado correctamente",
+	})
+}
+
 
 func ListarProductos(w http.ResponseWriter, r *http.Request) {
 	db := utils.GetDB()
