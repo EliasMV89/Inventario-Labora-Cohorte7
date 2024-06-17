@@ -9,10 +9,10 @@ import (
 
 )
 
-	func main() {
-		utils.InitDB()
-		router := routers.InitRouter()
-		log.Fatal(http.ListenAndServe(":8080", router))
-	}
+func main() {
+	utils.InitDB()
+	router := routers.InitRouter()
+	log.Fatal(http.ListenAndServe(":8080", router))
+}
 
 
