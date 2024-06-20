@@ -22,6 +22,34 @@ func AgregarProveedor(db *sql.DB, proveedor Proveedor) error {
 	return nil
 }
 
+func ListarProveedores(db *sql.DB) ([]Proveedor, error) {
+	query := `SELECT Nombre, Contacto FROM Proveedores`
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Printf("Error al obtener la lista de proveedores: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var proveedores []Proveedor
+	for rows.Next() {
+		var proveedor Proveedor
+		err := rows.Scan(&proveedor.Nombre, &proveedor.Contacto)
+		if err != nil {
+			log.Printf("Error al escanear fila de proveedor: %v", err)
+			return nil, err
+		}
+		proveedores = append(proveedores, proveedor)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("Error al iterar filas de proveedores: %v", err)
+		return nil, err
+	}
+
+	return proveedores, nil
+}
+
 func ModificarProveedor(db *sql.DB, id int, proveedor Proveedor) error {
 	query := `UPDATE Proveedores SET Nombre=?, Contacto=? WHERE ID=?`
 	_, err := db.Exec(query, proveedor.Nombre, proveedor.Contacto, id)

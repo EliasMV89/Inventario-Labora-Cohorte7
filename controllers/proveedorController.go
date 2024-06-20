@@ -30,6 +30,18 @@ func AgregarProveedor(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ListarProveedores(w http.ResponseWriter, r *http.Request) {
+	db := utils.GetDB()
+	proveedores, err := services.ListarProveedores(db)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(proveedores)
+}
+
 func ModificarProveedor(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
