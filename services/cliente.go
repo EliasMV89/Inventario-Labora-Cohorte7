@@ -23,6 +23,34 @@ func AgregarCliente(db *sql.DB, cliente Cliente) error {
 	return nil
 }
 
+func ListarClientes(db *sql.DB) ([]Cliente, error) {
+	query := `SELECT id, Nombre, Contacto FROM Clientes`
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Printf("Error al obtener la lista de clientes: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var clientes []Cliente
+	for rows.Next() {
+		var cliente Cliente
+		err := rows.Scan(&cliente.ID, &cliente.Nombre, &cliente.Contacto)
+		if err != nil {
+			log.Printf("Error al escanear fila de cliente: %v", err)
+			return nil, err
+		}
+		clientes = append(clientes, cliente)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("Error al iterar filas de clientes: %v", err)
+		return nil, err
+	}
+
+	return clientes, nil
+}
+
 func ModificarCliente(db *sql.DB, cliente Cliente) error {
     query := `UPDATE Clientes SET Nombre=?, Contacto=? WHERE id=?`
     _, err := db.Exec(query, cliente.Nombre, cliente.Contacto, cliente.ID)

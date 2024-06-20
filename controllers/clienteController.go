@@ -30,6 +30,18 @@ func AgregarCliente(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ListarClientes(w http.ResponseWriter, r *http.Request) {
+	db := utils.GetDB()
+	clientes, err := services.ListarClientes(db)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(clientes)
+}
+
 func ModificarCliente(w http.ResponseWriter, r *http.Request) {
 	var cliente services.Cliente
 	if err := json.NewDecoder(r.Body).Decode(&cliente); err != nil {
