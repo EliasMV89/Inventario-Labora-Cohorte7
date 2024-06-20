@@ -27,6 +27,18 @@ func AgregarVenta(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func ListarVentas(w http.ResponseWriter, r *http.Request) {
+	db := utils.GetDB()
+	ventas, err := services.ListarVentas(db)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(ventas)
+}
+
 func BuscarVentaPorFecha(w http.ResponseWriter, r *http.Request) {
 	fecha := r.URL.Query().Get("fecha")
 	db := utils.GetDB()

@@ -69,6 +69,7 @@ func InitRouter() *mux.Router {
 
 	// Ventas
 	router.HandleFunc("/ventas", controllers.AgregarVenta).Methods("POST")
+	router.HandleFunc("/ventas", controllers.ListarVentas).Methods("GET")
 	router.HandleFunc("/ventas/buscar", controllers.BuscarVentaPorFecha).Methods("GET")
 	router.HandleFunc("/ventas/informe", controllers.GenerarInforme).Methods("GET")
 

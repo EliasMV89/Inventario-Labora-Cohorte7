@@ -80,6 +80,34 @@ func AgregarVenta(db *sql.DB, venta Venta) error {
 	return nil
 }
 
+func ListarVentas(db *sql.DB) ([]Venta, error) {
+	query := `SELECT ID, ID_Producto, ID_Cliente, Cantidad, Total, Fecha FROM Ventas`
+	rows, err := db.Query(query)
+	if err != nil {
+		log.Printf("Error al obtener la lista de ventas: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ventas []Venta
+	for rows.Next() {
+		var venta Venta
+		err := rows.Scan(&venta.Id, &venta.ID_Producto, &venta.ID_Cliente, &venta.Cantidad, &venta.Total, &venta.Fecha)
+		if err != nil {
+			log.Printf("Error al escanear fila de venta: %v", err)
+			return nil, err
+		}
+		ventas = append(ventas, venta)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("Error al iterar filas de ventas: %v", err)
+		return nil, err
+	}
+
+	return ventas, nil
+}
+
 func BuscarVentaPorFecha(db *sql.DB, fechaBusqueda string) ([]Venta, error) {
 	query := `SELECT ID_Producto, ID_Cliente, Cantidad, Total, Fecha FROM Ventas WHERE Fecha = ?`
 	rows, err := db.Query(query, fechaBusqueda)
