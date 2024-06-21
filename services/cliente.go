@@ -1,17 +1,19 @@
 package services
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
+	"database/sql" 
+	"fmt"          
+	"log"          
 )
 
+// Estructura Cliente define los campos que se corresponden con las columnas de la tabla Clientes
 type Cliente struct {
-    ID       int    `json:"id"`
-	Nombre   string `json:"nombre"`
-	Contacto string `json:"contacto"`
+    ID       int    `json:"id"`      // Identificador único del cliente
+	Nombre   string `json:"nombre"`  // Nombre del cliente
+	Contacto string `json:"contacto"`// Información de contacto del cliente
 }
 
+// AgregarCliente inserta un nuevo cliente en la base de datos
 func AgregarCliente(db *sql.DB, cliente Cliente) error {
 	query := `INSERT INTO Clientes (Nombre, Contacto) VALUES (?, ?)`
 	_, err := db.Exec(query, cliente.Nombre, cliente.Contacto)
@@ -23,6 +25,7 @@ func AgregarCliente(db *sql.DB, cliente Cliente) error {
 	return nil
 }
 
+// ListarClientes recupera todos los clientes de la base de datos
 func ListarClientes(db *sql.DB) ([]Cliente, error) {
 	query := `SELECT id, Nombre, Contacto FROM Clientes`
 	rows, err := db.Query(query)
@@ -51,6 +54,7 @@ func ListarClientes(db *sql.DB) ([]Cliente, error) {
 	return clientes, nil
 }
 
+// ModificarCliente actualiza los datos de un cliente existente en la base de datos
 func ModificarCliente(db *sql.DB, cliente Cliente) error {
     query := `UPDATE Clientes SET Nombre=?, Contacto=? WHERE id=?`
     _, err := db.Exec(query, cliente.Nombre, cliente.Contacto, cliente.ID)
@@ -62,6 +66,7 @@ func ModificarCliente(db *sql.DB, cliente Cliente) error {
     return nil
 }
 
+// EliminarCliente elimina un cliente de la base de datos
 func EliminarCliente(db *sql.DB, id int) error {
     query := `DELETE FROM Clientes WHERE id=?`
     _, err := db.Exec(query, id)
@@ -72,3 +77,5 @@ func EliminarCliente(db *sql.DB, id int) error {
     fmt.Println("Cliente eliminado correctamente.")
     return nil
 }
+
+

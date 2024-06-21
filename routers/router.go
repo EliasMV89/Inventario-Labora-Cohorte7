@@ -1,85 +1,46 @@
-/*package routers
-
-import (
-	"Inventario/controllers"
-	"Inventario/utils"
-	
-
-	"github.com/gorilla/mux"
-)
-
-func InitRouter() *mux.Router {
-	router := mux.NewRouter().StrictSlash(true)
-
-	// Clientes
-	router.HandleFunc("/clientes", controllers.AgregarCliente).Methods("POST")
-	router.HandleFunc("/clientes", controllers.ListarClientes).Methods("GET")
-	router.HandleFunc("/cliente/{id}", controllers.ModificarCliente).Methods("PUT")
-	router.HandleFunc("/cliente/{id}", controllers.EliminarCliente).Methods("DELETE")
-
-	// Productos
-	router.HandleFunc("/productos", controllers.AgregarProducto).Methods("POST")
-	router.HandleFunc("/producto/{id}", controllers.ModificarProducto).Methods("PUT")
-	router.HandleFunc("/producto/{id}", controllers.EliminarProducto).Methods("DELETE")
-	router.HandleFunc("/productos", controllers.ListarProductos).Methods("GET")
-	router.HandleFunc("/productos/buscar", controllers.BuscarProducto).Methods("GET")
-
-	// Proveedores
-	router.HandleFunc("/proveedores", controllers.AgregarProveedor).Methods("POST")
-	router.HandleFunc("/proveedores", controllers.ListarProveedores).Methods("GET")
-	router.HandleFunc("/proveedor/{id}", controllers.ModificarProveedor).Methods("PUT")
-	router.HandleFunc("/proveedor/{id}", controllers.EliminarProveedor).Methods("DELETE")
-
-	// Ventas
-	router.HandleFunc("/ventas", controllers.AgregarVenta).Methods("POST")
-	router.HandleFunc("/ventas", controllers.ListarVentas).Methods("GET")
-	router.HandleFunc("/ventas/buscar", controllers.BuscarVentaPorFecha).Methods("GET")
-	router.HandleFunc("/ventas/informe", controllers.GenerarInforme).Methods("GET")
-
-	router.Use(utils.CorsMiddleware)
-
-	return router
-}*/
-
 package routers
 
 import (
-    "Inventario/controllers"
-    "Inventario/utils"
+    "Inventario/controllers" 
+    "Inventario/utils"       
 
-    "github.com/gorilla/mux"
+    "github.com/gorilla/mux" 
 )
 
+// InitRouter inicializa el enrutador y configura las rutas de la aplicacion
 func InitRouter() *mux.Router {
+    // Crea un nuevo enrutador y establece StrictSlash en true para manejar correctamente las URL con o sin barra al final
     router := mux.NewRouter().StrictSlash(true)
 
-    // Clientes
-    router.HandleFunc("/clientes", controllers.AgregarCliente).Methods("POST", "OPTIONS")
-    router.HandleFunc("/clientes", controllers.ListarClientes).Methods("GET", "OPTIONS")
-    router.HandleFunc("/cliente/{id}", controllers.ModificarCliente).Methods("PUT", "OPTIONS")
-    router.HandleFunc("/cliente/{id}", controllers.EliminarCliente).Methods("DELETE", "OPTIONS")
+    // Rutas para Clientes
+    router.HandleFunc("/clientes", controllers.AgregarCliente).Methods("POST", "OPTIONS")      // Ruta para agregar un cliente
+    router.HandleFunc("/clientes", controllers.ListarClientes).Methods("GET", "OPTIONS")       // Ruta para listar todos los clientes
+    router.HandleFunc("/cliente/{id}", controllers.ModificarCliente).Methods("PUT", "OPTIONS") // Ruta para modificar un cliente por ID
+    router.HandleFunc("/cliente/{id}", controllers.EliminarCliente).Methods("DELETE", "OPTIONS") // Ruta para eliminar un cliente por ID
 
-    // Productos
-    router.HandleFunc("/productos", controllers.AgregarProducto).Methods("POST", "OPTIONS")
-    router.HandleFunc("/producto/{id}", controllers.ModificarProducto).Methods("PUT", "OPTIONS")
-    router.HandleFunc("/producto/{id}", controllers.EliminarProducto).Methods("DELETE", "OPTIONS")
-    router.HandleFunc("/productos", controllers.ListarProductos).Methods("GET", "OPTIONS")
-    router.HandleFunc("/productos/buscar", controllers.BuscarProducto).Methods("GET", "OPTIONS")
+    // Rutas para Productos
+    router.HandleFunc("/productos", controllers.AgregarProducto).Methods("POST", "OPTIONS")      // Ruta para agregar un producto
+    router.HandleFunc("/producto/{id}", controllers.ModificarProducto).Methods("PUT", "OPTIONS") // Ruta para modificar un producto por ID
+    router.HandleFunc("/producto/{id}", controllers.EliminarProducto).Methods("DELETE", "OPTIONS") // Ruta para eliminar un producto por ID
+    router.HandleFunc("/productos", controllers.ListarProductos).Methods("GET", "OPTIONS")       // Ruta para listar todos los productos
+    router.HandleFunc("/productos/buscar", controllers.BuscarProducto).Methods("GET", "OPTIONS") // Ruta para buscar productos
 
-    // Proveedores
-    router.HandleFunc("/proveedores", controllers.AgregarProveedor).Methods("POST", "OPTIONS")
-    router.HandleFunc("/proveedores", controllers.ListarProveedores).Methods("GET", "OPTIONS")
-    router.HandleFunc("/proveedor/{id}", controllers.ModificarProveedor).Methods("PUT", "OPTIONS")
-    router.HandleFunc("/proveedor/{id}", controllers.EliminarProveedor).Methods("DELETE", "OPTIONS")
+    // Rutas para Proveedores
+    router.HandleFunc("/proveedores", controllers.AgregarProveedor).Methods("POST", "OPTIONS")      // Ruta para agregar un proveedor
+    router.HandleFunc("/proveedores", controllers.ListarProveedores).Methods("GET", "OPTIONS")       // Ruta para listar todos los proveedores
+    router.HandleFunc("/proveedor/{id}", controllers.ModificarProveedor).Methods("PUT", "OPTIONS") // Ruta para modificar un proveedor por ID
+    router.HandleFunc("/proveedor/{id}", controllers.EliminarProveedor).Methods("DELETE", "OPTIONS") // Ruta para eliminar un proveedor por ID
 
-    // Ventas
-    router.HandleFunc("/ventas", controllers.AgregarVenta).Methods("POST", "OPTIONS")
-    router.HandleFunc("/ventas", controllers.ListarVentas).Methods("GET", "OPTIONS")
-    router.HandleFunc("/ventas/buscar", controllers.BuscarVentaPorFecha).Methods("GET", "OPTIONS")
-    router.HandleFunc("/ventas/informe", controllers.GenerarInforme).Methods("GET", "OPTIONS")
+    // Rutas para Ventas
+    router.HandleFunc("/ventas", controllers.AgregarVenta).Methods("POST", "OPTIONS")              // Ruta para agregar una venta
+    router.HandleFunc("/ventas", controllers.ListarVentas).Methods("GET", "OPTIONS")               // Ruta para listar todas las ventas
+    router.HandleFunc("/ventas/buscar", controllers.BuscarVentaPorFecha).Methods("GET", "OPTIONS") // Ruta para buscar ventas por fecha
+    router.HandleFunc("/ventas/informe", controllers.GenerarInforme).Methods("GET", "OPTIONS")     // Ruta para generar un informe de ventas
 
     // Middleware CORS
     router.Use(utils.CorsMiddleware)
 
     return router
 }
+
+    

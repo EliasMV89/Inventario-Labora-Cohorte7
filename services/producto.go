@@ -1,20 +1,22 @@
 package services
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
+	"database/sql" 
+	"fmt"          
+	"log"          
 )
 
+// Estructura Producto define los campos que se corresponden con las columnas de la tabla Productos
 type Producto struct {
-	Id           string  `json:"id"`
-	Nombre       string  `json:"nombre"`
-	Categoria    string  `json:"categoria"`
-	Precio       float64 `json:"precio"`
-	Cantidad     int     `json:"cantidad"`
+	Id           string  `json:"id"`          
+	Nombre       string  `json:"nombre"`      
+	Categoria    string  `json:"categoria"`   
+	Precio       float64 `json:"precio"`      
+	Cantidad     int     `json:"cantidad"`    
 	ID_Proveedor int     `json:"id_proveedor"`
 }
 
+// AgregarProducto inserta un nuevo producto en la base de datos
 func AgregarProducto(db *sql.DB, producto Producto) error {
 	query := `INSERT INTO Productos (Nombre, Categoria, Precio, Cantidad, ID_Proveedor) VALUES (?, ?, ?, ?, ?)`
 	_, err := db.Exec(query, producto.Nombre, producto.Categoria, producto.Precio, producto.Cantidad, producto.ID_Proveedor)
@@ -26,6 +28,7 @@ func AgregarProducto(db *sql.DB, producto Producto) error {
 	return nil
 }
 
+// ModificarProducto actualiza los datos de un producto existente en la base de datos
 func ModificarProducto(db *sql.DB, producto Producto) error {
 	query := `UPDATE Productos SET Nombre=?, Categoria=?, Precio=?, Cantidad=?, ID_Proveedor=? WHERE Id=?`
 	_, err := db.Exec(query, producto.Nombre, producto.Categoria, producto.Precio, producto.Cantidad, producto.ID_Proveedor, producto.Id)
@@ -37,6 +40,7 @@ func ModificarProducto(db *sql.DB, producto Producto) error {
 	return nil
 }
 
+// EliminarProducto elimina un producto de la base de datos por su ID
 func EliminarProducto(db *sql.DB, id string) error {
 	query := `DELETE FROM Productos WHERE Id=?`
 	_, err := db.Exec(query, id)
@@ -48,6 +52,7 @@ func EliminarProducto(db *sql.DB, id string) error {
 	return nil
 }
 
+// ListarProductos recupera todos los productos de la base de datos
 func ListarProductos(db *sql.DB) ([]Producto, error) {
 	query := `SELECT Id, Nombre, Categoria, Precio, Cantidad, ID_Proveedor FROM Productos`
 	rows, err := db.Query(query)
@@ -60,7 +65,7 @@ func ListarProductos(db *sql.DB) ([]Producto, error) {
 	var productos []Producto
 	for rows.Next() {
 		var producto Producto
-		if err := rows.Scan(&producto.Id, &producto.Nombre, &producto.Categoria, &producto.Precio, &producto.Cantidad, &producto.ID_Proveedor); err != nil { // Se agrega Precio al Scan
+		if err := rows.Scan(&producto.Id, &producto.Nombre, &producto.Categoria, &producto.Precio, &producto.Cantidad, &producto.ID_Proveedor); err != nil {
 			log.Printf("Error al leer fila: %v", err)
 			continue
 		}
@@ -73,6 +78,7 @@ func ListarProductos(db *sql.DB) ([]Producto, error) {
 	return productos, nil
 }
 
+// BuscarProducto busca productos por nombre o categoría en la base de datos
 func BuscarProducto(db *sql.DB, buscar string) ([]Producto, error) {
 	buscar = "%" + buscar + "%"
 	query := `SELECT Id, Nombre, Categoria, Precio, Cantidad, ID_Proveedor FROM Productos WHERE Nombre LIKE ? OR Categoria LIKE ?`
@@ -89,7 +95,7 @@ func BuscarProducto(db *sql.DB, buscar string) ([]Producto, error) {
 	var productos []Producto
 	for rows.Next() {
 		var producto Producto
-		if err := rows.Scan(&producto.Id, &producto.Nombre, &producto.Categoria,&producto.Precio,&producto.Cantidad,&producto.ID_Proveedor);err != nil { 
+		if err := rows.Scan(&producto.Id, &producto.Nombre, &producto.Categoria, &producto.Precio, &producto.Cantidad, &producto.ID_Proveedor); err != nil {
 			log.Printf("Error al leer fila: %v", err)
 			continue
 		}
@@ -99,9 +105,10 @@ func BuscarProducto(db *sql.DB, buscar string) ([]Producto, error) {
 		log.Printf("Error al iterar filas: %v", err)
 		return nil, err
 	}
-	return productos,nil 
+	return productos, nil
 }
 
+// ActualizarStock actualiza la cantidad de un producto en la base de datos
 func ActualizarStock(db *sql.DB, cantidad, idProducto int) error {
 	query := `UPDATE Productos SET Cantidad = Cantidad - ? WHERE ID = ?`
 	_, err := db.Exec(query, cantidad, idProducto)
