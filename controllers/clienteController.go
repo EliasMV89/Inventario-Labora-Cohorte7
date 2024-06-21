@@ -4,9 +4,9 @@ import (
 	"Inventario/services"
 	"Inventario/utils"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
-
 	"github.com/gorilla/mux"
 )
 
@@ -43,24 +43,30 @@ func ListarClientes(w http.ResponseWriter, r *http.Request) {
 }
 
 func ModificarCliente(w http.ResponseWriter, r *http.Request) {
-	var cliente services.Cliente
-	if err := json.NewDecoder(r.Body).Decode(&cliente); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    var cliente services.Cliente
+    if err := json.NewDecoder(r.Body).Decode(&cliente); err != nil {
+        log.Printf("Error al decodificar el cuerpo de la solicitud: %v", err)
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
+    log.Printf("Datos del cliente recibidos: %+v", cliente)
 
-	db := utils.GetDB()
-	err := services.ModificarCliente(db, cliente)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+    db := utils.GetDB()
+    err := services.ModificarCliente(db, cliente)
+    if err != nil {
+        log.Printf("Error al modificar el cliente en la base de datos: %v", err)
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"message": "Cliente modificado correctamente",
-	})
+    log.Println("Cliente modificado correctamente")
+    w.WriteHeader(http.StatusOK)
+    json.NewEncoder(w).Encode(map[string]interface{}{
+        "message": "Cliente modificado correctamente",
+    })
 }
+
+
 
 func EliminarCliente(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)

@@ -7,6 +7,7 @@ import (
 )
 
 type Proveedor struct {
+	ID       int    `json:"id"`        // Asegúrate de tener el ID aquí
 	Nombre   string `json:"nombre"`
 	Contacto string `json:"contacto"`
 }
@@ -23,7 +24,7 @@ func AgregarProveedor(db *sql.DB, proveedor Proveedor) error {
 }
 
 func ListarProveedores(db *sql.DB) ([]Proveedor, error) {
-	query := `SELECT Nombre, Contacto FROM Proveedores`
+	query := `SELECT ID, Nombre, Contacto FROM Proveedores`
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Printf("Error al obtener la lista de proveedores: %v", err)
@@ -34,7 +35,7 @@ func ListarProveedores(db *sql.DB) ([]Proveedor, error) {
 	var proveedores []Proveedor
 	for rows.Next() {
 		var proveedor Proveedor
-		err := rows.Scan(&proveedor.Nombre, &proveedor.Contacto)
+		err := rows.Scan(&proveedor.ID, &proveedor.Nombre, &proveedor.Contacto) // Asegúrate de escanear el ID aquí
 		if err != nil {
 			log.Printf("Error al escanear fila de proveedor: %v", err)
 			return nil, err
@@ -71,4 +72,5 @@ func EliminarProveedor(db *sql.DB, id int) error {
 	fmt.Println("Proveedor eliminado correctamente.")
 	return nil
 }
+
 
