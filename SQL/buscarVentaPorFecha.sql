@@ -1,2 +1,2 @@
--- 4. Mostrar las ventas realizadas en un dia especifo
+-- Buscar ventas en una fecha especifica
 SELECT ID_Producto, ID_Cliente, Cantidad, Fecha FROM Ventas WHERE Fecha = ?;

@@ -78,7 +78,7 @@ func ListarProductos(db *sql.DB) ([]Producto, error) {
 	return productos, nil
 }
 
-// BuscarProducto busca productos por nombre o categoría en la base de datos
+// BuscarProducto busca productos por nombre o categoria en la base de datos
 func BuscarProducto(db *sql.DB, buscar string) ([]Producto, error) {
 	buscar = "%" + buscar + "%"
 	query := `SELECT Id, Nombre, Categoria, Precio, Cantidad, ID_Proveedor FROM Productos WHERE Nombre LIKE ? OR Categoria LIKE ?`
